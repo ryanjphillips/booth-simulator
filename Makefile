@@ -1,17 +1,17 @@
 .PHONY = format cppcheck
 
-CC = gcc
+CC = g++
 valgrindFile = valgrind.txt
-SRC = main.c
+SRC = main.cpp
 
 make.out: ${SRC}
-	$(CC) boothsAlgorithm.h modifiedBooths.h $^ -o $@ 
+	$(CC) $^ -o $@ 
 
 debug.out: ${SRC}
 	$(CC) $(FLAGS) -g $^ -o $@ 
 
 format: ${SRC}
-	clang-format -i boothsAlgorithm.h modifiedBooths.h $^
+	clang-format -i $^
  
 gdb: debug.out 
 	gdb --args ./debug.out 
