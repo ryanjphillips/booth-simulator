@@ -5,13 +5,13 @@ valgrindFile = valgrind.txt
 SRC = main.c
 
 make.out: ${SRC}
-	$(CC) $^ -o $@ 
+	$(CC) boothsAlgorithm.h modifiedBooths.h $^ -o $@ 
 
 debug.out: ${SRC}
 	$(CC) $(FLAGS) -g $^ -o $@ 
 
 format: ${SRC}
-	clang-format -i $^
+	clang-format -i boothsAlgorithm.h modifiedBooths.h $^
  
 gdb: debug.out 
 	gdb --args ./debug.out 
