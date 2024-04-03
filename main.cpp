@@ -6,6 +6,7 @@ using namespace std;
 // function to perform adding in the accumulatorcumulator
 void add(int accumulator[], int x[], int multiplierLength)
 {
+
     int i, c = 0;
      
     for (i = 0; i < multiplierLength; i++) {
@@ -26,14 +27,28 @@ void add(int accumulator[], int x[], int multiplierLength)
 void complement(int a[], int n)
 {
     int increment;
-    int x[8] = {0};
-    x[0] = 1;
+    int x[n] = {0};
+    x[n - 1] = 1;
      
     for (increment = 0; increment < n; increment++) {
         a[increment] = (a[increment] + 1) % 2;
-        cout << a[increment] << endl;
     }
-    add(a, x, n);
+
+    int i, c = 0;
+     
+    for (i = n - 1; i >= 0 ; i--) {
+         
+        // updating accumulatorcumulator with A = A + multiplicand
+        a[i] = a[i] + x[i] + c;
+         
+        if (a[i] > 1) {
+            a[i] = a[i] % 2;
+            c = 1;
+        }
+        else
+            c = 0;
+    }
+
 }
  
 // function to perform right shift
@@ -75,7 +90,7 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
     int accumulator[multiplicandLength] = { 0 };
     int temp = 0;
     cout << "E\tq[n+1]\t\tmultiplicand\t\tAC\tmultiplier\t\tsequenceCounter\n";
-    cout << "\t\t\tinitial\t\t";
+    cout << "\t\t\t\tinitial\t\t";
      
     display(accumulator, multiplier, multiplierLength);
     cout << "\t\t" << sequenceCounter << "\n";
@@ -87,6 +102,7 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
         // If 01 OR 10
         if ((E + multiplier[0]) == 1)
         {
+            // 10
             if (temp == 0) {
                  
                 add(accumulator, multiplicandComp, multiplierLength);
@@ -97,7 +113,7 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
                 temp = 1;
             }
              
-            // THIRD CONDITION
+            // 01
             else if (temp == 1)
             {
                 // add multiplicand to accumulatorcumulator
@@ -135,13 +151,13 @@ void populateBinaryArray(int binaryNumberArray[], int size, string binaryNumber)
 }
 
 void deleteArray();
-void printResult();
+void printResults();
  
 int main()
 {
     // Need to change this to CIN input
-    string stringMultiplicand = "1101101";
-    string stringMultiplier = "0000111";
+    string stringMultiplicand = "1111";
+    string stringMultiplier = "1110";
     int multiplierLength = stringMultiplier.length();
     int multiplicandLength = stringMultiplicand.length();
 
@@ -153,17 +169,16 @@ int main()
 
     int multiplicandComp[multiplicandLength]; 
     int sequenceCounter;
-     
-
+    
     // Store Two's Complement of Multiplicand
     for (int i = multiplicandLength - 1; i >= 0; i--) {
         multiplicandComp[i] = multiplicand[i]; 
     }
 
-    complement(multiplicandComp, multiplicandLength);
-     
     reverse(multiplicand, multiplicand + multiplicandLength);
+    complement(multiplicandComp, multiplicandLength);
     sequenceCounter = multiplierLength;
     reverse(multiplier, multiplier + multiplierLength);
+    reverse(multiplicandComp, multiplicandComp + multiplicandLength);
     boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter);
 }
