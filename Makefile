@@ -2,7 +2,7 @@
 
 CC = g++
 valgrindFile = valgrind.txt
-SRC = main.cpp
+SRC = modified.cpp
 
 make.out: ${SRC}
 	$(CC) $^ -o $@ 

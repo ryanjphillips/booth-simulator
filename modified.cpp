@@ -11,7 +11,6 @@ void add(int accumulator[], int x[], int multiplierLength)
      
     for (i = 0; i < multiplierLength; i++) {
          
-        // updating accumulatorcumulator with A = A + multiplicand
         accumulator[i] = accumulator[i] + x[i] + c;
          
         if (accumulator[i] > 1) {
@@ -55,8 +54,12 @@ void logicalShiftLeft(int multiplicand[], int multiplicandLength) {
 
     int temp;
     int i;
+    // Length = 5
      
-    for (i = multiplicandLength - 1; i >= 0; i--) {
+    // 101110
+    // 010111
+
+    for (i = multiplicandLength; i > 0; i--) {
         multiplicand[i] = multiplicand[i - 1];
     }
     multiplicand[0] = 0;
@@ -68,8 +71,6 @@ void arithmeticRightShft(int accumulator[], int multiplier[], int& E, int multip
     int temp, i;
     temp = accumulator[0];
     E = multiplier[0];
-     
-    cout << "\t\tarithmeticRightShft\t";
      
     for (i = 0; i < multiplierLength - 1; i++) {
         accumulator[i] = accumulator[i + 1];
@@ -83,24 +84,24 @@ void display(int accumulator[], int multiplier[], int multiplierLength)
 {
     int i;
      
-    // accumulatorcumulator content
+    // Contents of AC
     for (i = multiplierLength - 1; i >= 0; i--)
         cout << accumulator[i];
     cout << "\t";
      
-    // multiplier content
+    // Contents of Multiplier
     for (i = multiplierLength - 1; i >= 0; i--)
         cout << multiplier[i];
 }
  
 // Function to implement booth's algo
-void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[], int multiplierLength, int multiplicandLength, int sequenceCounter)
+void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[], int multiplierLength, int multiplicandLength, int sequenceCounter, int addCounter, int subCounter)
 {
  
     int E = 0; 
     int accumulator[multiplicandLength] = { 0 };
-    cout << "E\tq[n+1]\t\tmultiplicand\t\tAC\tmultiplier\t\tsequenceCounter\n";
-    cout << "\t\t\t\tinitial\t\t";
+    cout << "E\tq[n+1]\t\tmultiplicand\t\tAC\tmultiplier\tsequenceCounter\n";
+    cout << "\t\t\tinitial\t\t\t";
      
     display(accumulator, multiplier, multiplierLength);
     cout << "\t\t" << sequenceCounter << "\n";
@@ -115,7 +116,8 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
          
         if ((first == 1 && second == 0 && third == 1) || (first == 1 && second == 1 && third == 0)) {
                  
-            cout << "\t\tA = A - multiplicand\t";
+            subCounter++;
+            cout << "\t\tSub Counter:" << subCounter << "\t\t";
             add(accumulator, multiplicandComp, multiplierLength);
              
             for (int i = multiplierLength - 1; i >= 0; i--)
@@ -124,7 +126,8 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
         } else if ((first == 0 && second == 0 && third == 1) || (first == 0 && second == 1 && third == 0)) {
                 // add multiplicand to accumulatorcumulator
                 add(accumulator, multiplicand, multiplierLength);
-                cout << "\t\tA = A + multiplicand\t";
+                addCounter++;
+                cout << "\t\tAdd Counter:" << addCounter << "\t\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
@@ -132,7 +135,8 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
         } else if ((first == 0 && second == 1 && third == 1)) {
                 logicalShiftLeft(multiplicand, multiplicandLength);
                 add(accumulator, multiplicand, multiplierLength);
-                cout << "\t\tA = A + multiplicand\t";
+                addCounter++;
+                cout << "\t\tAdd Counter:" << addCounter << "\t\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
@@ -140,13 +144,15 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
         } else if ((first == 1 && second == 0 && third == 0)) {
                 logicalShiftLeft(multiplicandComp, multiplicandLength);
                 add(accumulator, multiplicandComp, multiplierLength);
-                cout << "\t\tA = A + multiplicand\t";
+                addCounter++;
+                cout << "\t\tAdd Counter:" << addCounter << "\t\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
         }
 
         cout << "\n\t";
+        cout << "\t\tarithmeticRightShft\t";
         arithmeticRightShft(accumulator, multiplier, E, multiplierLength);
         arithmeticRightShft(accumulator, multiplier, E, multiplierLength);
 
@@ -156,8 +162,15 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
         cout << "\t";
          
         // decrement counter
-        sequenceCounter = sequenceCounter - 2;
-        cout << "\t" << sequenceCounter << "\n";
+        sequenceCounter--;
+        
+        // Check for Sequence Counter Going Below 0
+
+        if (sequenceCounter < 0) {
+            cout << "\t" << 0 << "\n";
+        } else {
+            cout << "\t" << sequenceCounter << "\n";
+        }
     }
 }
 
@@ -168,17 +181,16 @@ void populateBinaryArray(int binaryNumberArray[], int size, string binaryNumber)
         binaryNumberArray[x] = binaryNumb;
     }
 }
-
-void deleteArray();
-void printResults();
  
 int main()
 {
     // Need to change this to CIN input
     string stringMultiplicand = "11101";
-    string stringMultiplier = "10111";
+    string stringMultiplier = "110111";
     int multiplierLength = stringMultiplier.length();
     int multiplicandLength = stringMultiplicand.length();
+    int subCounter = 0;
+    int addCounter = 0;
 
     int* multiplicand = new int[multiplicandLength];
     populateBinaryArray(multiplicand, multiplicandLength, stringMultiplicand);
@@ -196,8 +208,8 @@ int main()
 
     reverse(multiplicand, multiplicand + multiplicandLength);
     complement(multiplicandComp, multiplicandLength);
-    sequenceCounter = multiplierLength;
+    sequenceCounter = multiplierLength / 2;
     reverse(multiplier, multiplier + multiplierLength);
     reverse(multiplicandComp, multiplicandComp + multiplicandLength);
-    boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter);
+    boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter, subCounter, addCounter);
 }

@@ -58,7 +58,7 @@ void arithmeticRightShft(int accumulator[], int multiplier[], int& E, int multip
     temp = accumulator[0];
     E = multiplier[0];
      
-    cout << "\t\tarithmeticRightShft\t";
+    cout << "\t\RightShft\t";
      
     for (i = 0; i < multiplierLength - 1; i++) {
         accumulator[i] = accumulator[i + 1];
@@ -83,7 +83,7 @@ void display(int accumulator[], int multiplier[], int multiplierLength)
 }
  
 // Function to implement booth's algo
-void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[], int multiplierLength, int multiplicandLength, int sequenceCounter)
+void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[], int multiplierLength, int multiplicandLength, int sequenceCounter, int addCount, int subCount)
 {
  
     int E = 0; 
@@ -106,7 +106,8 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
             if (temp == 0) {
                  
                 add(accumulator, multiplicandComp, multiplierLength);
-                cout << "\t\tA = A - multiplicand\t";
+                subCount += 1;
+                cout << "\t\tSub Counter: \t" << subCount << "\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
@@ -118,7 +119,8 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
             {
                 // add multiplicand to accumulatorcumulator
                 add(accumulator, multiplicand, multiplierLength);
-                cout << "\t\tA = A + multiplicand\t";
+                addCount += 1;
+                cout << "\t\tAdd Counter: \t" << addCount ;
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
@@ -156,10 +158,12 @@ void printResults();
 int main()
 {
     // Need to change this to CIN input
-    string stringMultiplicand = "1111";
-    string stringMultiplier = "1110";
+    string stringMultiplicand = "11101";
+    string stringMultiplier = "110111";
     int multiplierLength = stringMultiplier.length();
     int multiplicandLength = stringMultiplicand.length();
+    int addCount = 0;
+    int subCount = 0;
 
     int* multiplicand = new int[multiplicandLength];
     populateBinaryArray(multiplicand, multiplicandLength, stringMultiplicand);
@@ -180,5 +184,5 @@ int main()
     sequenceCounter = multiplierLength;
     reverse(multiplier, multiplier + multiplierLength);
     reverse(multiplicandComp, multiplicandComp + multiplicandLength);
-    boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter);
+    boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter, addCount, subCount);
 }
