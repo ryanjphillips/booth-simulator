@@ -1,17 +1,20 @@
-// CPP code to implement booth's algorithm
-#include <bits/stdc++.h>
- 
+// Includes:
+
+#include <iostream>   
+#include <algorithm>  // For std::reverse
+#include <string>     
+
 using namespace std;
  
-// function to perform adding in the accumulatorcumulator
+// Function to add the contents of the multiplicand to the accumulator.
+//
 void add(int accumulator[], int x[], int multiplierLength)
 {
-
-    int i, c = 0;
+    int i; 
+    int c = 0;
      
     for (i = 0; i < multiplierLength; i++) {
          
-        // updating accumulatorcumulator with A = A + multiplicand
         accumulator[i] = accumulator[i] + x[i] + c;
          
         if (accumulator[i] > 1) {
@@ -22,8 +25,10 @@ void add(int accumulator[], int x[], int multiplierLength)
             c = 0;
     }
 }
+
+// Function that gives the compplement of an array. This is used before the start of the algo loop.
+// Second have is the same as the add function, but reversed because the multiplicand is reversed at the begging.
  
-// function to find the number's complement
 void complement(int a[], int n)
 {
     int increment;
@@ -38,7 +43,6 @@ void complement(int a[], int n)
      
     for (i = n - 1; i >= 0 ; i--) {
          
-        // updating accumulatorcumulator with A = A + multiplicand
         a[i] = a[i] + x[i] + c;
          
         if (a[i] > 1) {
@@ -50,15 +54,32 @@ void complement(int a[], int n)
     }
 
 }
- 
-// function to perform right shift
+
+// Function that multiplies the multiplicand by 2 or logical shift left.
+// Note: Multiplicand is in reverse, so multiplicand[length] is least MSB.
+
+void logicalShiftLeft(int multiplicand[], int multiplicandLength) {
+
+    int temp;
+    int i;
+
+    // Loops through reversed adding 0 to the LSB.
+    for (i = multiplicandLength; i > 0; i--) {
+        multiplicand[i] = multiplicand[i - 1];
+    }
+
+    multiplicand[0] = 0;
+}
+
+
+// Function that does a right shift.
+// Note: This is an arithmetic right shift the value of the MSB is going to be inputted at the end of the word.
+
 void arithmeticRightShft(int accumulator[], int multiplier[], int& E, int multiplierLength)
 {
     int temp, i;
     temp = accumulator[0];
     E = multiplier[0];
-     
-    cout << "\t\RightShft\t";
      
     for (i = 0; i < multiplierLength - 1; i++) {
         accumulator[i] = accumulator[i + 1];
@@ -67,7 +88,8 @@ void arithmeticRightShft(int accumulator[], int multiplier[], int& E, int multip
     multiplier[multiplierLength - 1] = temp;
 }
  
-// function to display operations
+// Funciton that cout's the accumulator and the multiplier.
+
 void display(int accumulator[], int multiplier[], int multiplierLength)
 {
     int i;
@@ -82,15 +104,16 @@ void display(int accumulator[], int multiplier[], int multiplierLength)
         cout << multiplier[i];
 }
  
-// Function to implement booth's algo
+// Function to implement Booth's Algorithm, not the modified version.
+
 void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[], int multiplierLength, int multiplicandLength, int sequenceCounter, int addCount, int subCount)
 {
  
     int E = 0; 
     int accumulator[multiplicandLength] = { 0 };
     int temp = 0;
-    cout << "E\tq[n+1]\t\tmultiplicand\t\tAC\tmultiplier\t\tsequenceCounter\n";
-    cout << "\t\t\t\tinitial\t\t";
+    cout << "q[n+1]\tE\tmultiplicand\tAC\tmultiplier\tsequenceCounter\n";
+    cout << "\t\tinitial\t\t";
      
     display(accumulator, multiplier, multiplierLength);
     cout << "\t\t" << sequenceCounter << "\n";
@@ -107,7 +130,7 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
                  
                 add(accumulator, multiplicandComp, multiplierLength);
                 subCount += 1;
-                cout << "\t\tSub Counter: \t" << subCount << "\t";
+                cout << "\tSub Counter: \t" << subCount << "\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
@@ -120,18 +143,20 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
                 // add multiplicand to accumulatorcumulator
                 add(accumulator, multiplicand, multiplierLength);
                 addCount += 1;
-                cout << "\t\tAdd Counter: \t" << addCount ;
+                cout << "\tAdd Counter:" << addCount << "\t" ;
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
                 temp = 0;
             }
             cout << "\n\t";
+            cout << "\tRight Shift\t";
             arithmeticRightShft(accumulator, multiplier, E, multiplierLength);
         }
          
         // 00 No Action, Shift Right AND 11 No Action, Shift Right
         else if (E - multiplier[0] == 0)
+            cout << "\tRight Shift\t";
             arithmeticRightShft(accumulator, multiplier, E, multiplierLength);
         
         display(accumulator, multiplier, multiplierLength);
@@ -144,20 +169,23 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
     }
 }
 
+// Function to take a string and make an array from it. 
+
 void populateBinaryArray(int binaryNumberArray[], int size, string binaryNumber){
+
     for (int x = 0; x < size; x++) {
         char binaryChar = binaryNumber[x];
         int binaryNumb = binaryChar - '0';
         binaryNumberArray[x] = binaryNumb;
     }
 }
-
-void deleteArray();
-void printResults();
  
 int main()
 {
-    // Need to change this to CIN input
+    // Pre-initialize Booth's Algorithm. 
+    // Set the lengths of the multiplier and multiplicand.
+    // Calculate the Two's complement of the multiplicnad.
+    
     string stringMultiplicand = "11101";
     string stringMultiplier = "110111";
     int multiplierLength = stringMultiplier.length();
@@ -165,6 +193,8 @@ int main()
     int addCount = 0;
     int subCount = 0;
 
+    // Move strings into bit array.
+    
     int* multiplicand = new int[multiplicandLength];
     populateBinaryArray(multiplicand, multiplicandLength, stringMultiplicand);
 
@@ -174,15 +204,19 @@ int main()
     int multiplicandComp[multiplicandLength]; 
     int sequenceCounter;
     
-    // Store Two's Complement of Multiplicand
+    // Create additional array of multiplicand.
+    
     for (int i = multiplicandLength - 1; i >= 0; i--) {
         multiplicandComp[i] = multiplicand[i]; 
     }
 
+    // Reverse arrays and get Two's Complement of multiplicand.
     reverse(multiplicand, multiplicand + multiplicandLength);
     complement(multiplicandComp, multiplicandLength);
     sequenceCounter = multiplierLength;
     reverse(multiplier, multiplier + multiplierLength);
     reverse(multiplicandComp, multiplicandComp + multiplicandLength);
+
+    // Call the main loop, Booth's Algorith.
     boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter, addCount, subCount);
 }

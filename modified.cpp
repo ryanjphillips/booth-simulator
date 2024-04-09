@@ -100,7 +100,7 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
  
     int E = 0; 
     int accumulator[multiplicandLength] = { 0 };
-    cout << "E\tq[n+1]\t\tmultiplicand\t\tAC\tmultiplier\tsequenceCounter\n";
+    cout << "q[n+1]\tE\t\tmultiplicand\t\tAC\tmultiplier\tsequenceCounter\n";
     cout << "\t\t\tinitial\t\t\t";
      
     display(accumulator, multiplier, multiplierLength);
