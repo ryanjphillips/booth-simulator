@@ -108,17 +108,19 @@ void display(int accumulator[], int multiplier[], int multiplierLength)
 
 void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[], int multiplierLength, int multiplicandLength, int sequenceCounter, int addCount, int subCount)
 {
- 
     int E = 0; 
     int accumulator[multiplicandLength] = { 0 };
     int temp = 0;
+
+    // Print Table Header.
+    cout << "Booth's Algorithm\n";
     cout << "q[n+1]\tE\tmultiplicand\tAC\tmultiplier\tsequenceCounter\n";
     cout << "\t\tinitial\t\t";
-     
     display(accumulator, multiplier, multiplierLength);
-    cout << "\t\t" << sequenceCounter << "\n";
-     
-    // Everytime we ASHR decrease the Sequence Counter
+    cout << "\t\t\t" << sequenceCounter << "\n";
+
+    // Main Loop, based on the Sequence Counter and based off the multiplicand length.
+    
     while (sequenceCounter != 0) {
         cout << multiplier[0] << "\t" << E;
          
@@ -130,7 +132,7 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
                  
                 add(accumulator, multiplicandComp, multiplierLength);
                 subCount += 1;
-                cout << "\tSub Counter: \t" << subCount << "\t";
+                cout << "\tSub Counter:" << subCount << "\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
@@ -160,12 +162,94 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
             arithmeticRightShft(accumulator, multiplier, E, multiplierLength);
         
         display(accumulator, multiplier, multiplierLength);
-        
         cout << "\t";
          
-        // decrement counter
+        // Decrement counter
         sequenceCounter--;
-        cout << "\t" << sequenceCounter << "\n";
+        cout << "\t\t" << sequenceCounter << "\n";
+    }
+}
+
+
+// Function to display modified Booth's algorithm.
+
+void modifiedBoothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[], int multiplierLength, int multiplicandLength, int sequenceCounter, int addCounter, int subCounter)
+{
+ 
+    int E = 0; 
+    int accumulator[multiplicandLength] = { 0 };
+    // There is half in Modified Booth's Algoithm.
+    sequenceCounter /= 2;
+
+    cout << "Modified Booth's Algorithm\n";
+    cout << "q[n+1]\tE\tmultiplicand\t\tAC\tmultiplier\tsequenceCounter\n";
+    cout << "\t\tinitial\t\t\t";
+    display(accumulator, multiplier, multiplierLength);
+    cout << "\t\t" << sequenceCounter << "\n";
+     
+    // Main Loop, based on the Sequence Counter and based off the multiplicand length.
+    
+    while (sequenceCounter > 0) {
+        cout << multiplier[0] << "\t" << E;
+
+        int first = multiplier[1];
+        int second = multiplier[0];
+        int third = E;
+         
+        if ((first == 1 && second == 0 && third == 1) || (first == 1 && second == 1 && third == 0)) {
+                 
+            subCounter++;
+            cout << "\tSub Counter:" << subCounter << "\t\t";
+            add(accumulator, multiplicandComp, multiplierLength);
+             
+            for (int i = multiplierLength - 1; i >= 0; i--)
+                cout << accumulator[i];
+
+        } else if ((first == 0 && second == 0 && third == 1) || (first == 0 && second == 1 && third == 0)) {
+                add(accumulator, multiplicand, multiplierLength);
+                addCounter++;
+                cout << "\tAdd Counter:" << addCounter << "\t\t";
+                 
+                for (int i = multiplierLength - 1; i >= 0; i--)
+                    cout << accumulator[i];
+
+        } else if ((first == 0 && second == 1 && third == 1)) {
+                logicalShiftLeft(multiplicand, multiplicandLength);
+                add(accumulator, multiplicand, multiplierLength);
+                addCounter++;
+                cout << "\tAdd Counter:" << addCounter << "\t\t";
+                 
+                for (int i = multiplierLength - 1; i >= 0; i--)
+                    cout << accumulator[i];
+
+        } else if ((first == 1 && second == 0 && third == 0)) {
+                logicalShiftLeft(multiplicandComp, multiplicandLength);
+                add(accumulator, multiplicandComp, multiplierLength);
+                addCounter++;
+                cout << "\tAdd Counter:" << addCounter << "\t\t";
+                 
+                for (int i = multiplierLength - 1; i >= 0; i--)
+                    cout << accumulator[i];
+        }
+
+        // Always Shift Right after it's complete.
+        cout << "\n\t";
+        cout << "\tRight Shift\t\t";
+        arithmeticRightShft(accumulator, multiplier, E, multiplierLength);
+        arithmeticRightShft(accumulator, multiplier, E, multiplierLength);
+
+        display(accumulator, multiplier, multiplierLength);
+        cout << "\t";
+         
+        sequenceCounter--;
+        
+        // Check for Sequence Counter Going Below 0. For Display Purposes.
+
+        if (sequenceCounter < 0) {
+            cout << "\t" << 0 << "\n";
+        } else {
+            cout << "\t" << sequenceCounter << "\n";
+        }
     }
 }
 
@@ -179,15 +263,17 @@ void populateBinaryArray(int binaryNumberArray[], int size, string binaryNumber)
         binaryNumberArray[x] = binaryNumb;
     }
 }
- 
-int main()
+
+// Function to setup algorithms.
+
+void algorithmInit(string currentMultiplicand, string currentMultiplier, int algorithmVersion)
 {
     // Pre-initialize Booth's Algorithm. 
     // Set the lengths of the multiplier and multiplicand.
     // Calculate the Two's complement of the multiplicnad.
     
-    string stringMultiplicand = "11101";
-    string stringMultiplier = "110111";
+    string stringMultiplicand = currentMultiplicand;
+    string stringMultiplier = currentMultiplier;
     int multiplierLength = stringMultiplier.length();
     int multiplicandLength = stringMultiplicand.length();
     int addCount = 0;
@@ -218,5 +304,20 @@ int main()
     reverse(multiplicandComp, multiplicandComp + multiplicandLength);
 
     // Call the main loop, Booth's Algorith.
-    boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter, addCount, subCount);
+    // Check if booth's algorithm or modified.
+
+    if (algorithmVersion == 0) {
+      boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter, addCount, subCount);
+    } else {
+      modifiedBoothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter, addCount, subCount);
+    }
+}
+// Main function.
+
+int main() {
+
+    algorithmInit("11101", "110111", 0);
+    cout << "\n";
+    algorithmInit("11101", "110111", 1);
+    return 0;
 }
