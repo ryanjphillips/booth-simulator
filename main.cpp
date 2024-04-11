@@ -196,6 +196,7 @@ void modifiedBoothAlgorithm(int multiplicand[], int multiplier[], int multiplica
 
     logicalShiftLeft(twiceMultiplicandComp, multiplicandLength);
 
+    accumulator[0] = 0;
     cout << "Modified Booth's Algorithm\n";
     cout << "q[n+1]\tE\tmultiplicand\tAC\t\tmultiplier\t\tsequenceCounter\n";
     cout << "\t\tinitial\t\t";
@@ -238,8 +239,8 @@ void modifiedBoothAlgorithm(int multiplicand[], int multiplier[], int multiplica
 
         } else if ((first == 1 && second == 0 && third == 0)) {
                 add(accumulator, twiceMultiplicandComp, multiplicandLength);
-                addCounter++;
-                cout << "\tAdd Counter:" << addCounter << "\t";
+                subCounter++;
+                cout << "\tSub Counter:" << addCounter << "\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
