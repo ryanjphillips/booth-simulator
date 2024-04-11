@@ -214,7 +214,7 @@ void modifiedBoothAlgorithm(int multiplicand[], int multiplier[], int multiplica
          
         if ((first == 1 && second == 0 && third == 1) || (first == 1 && second == 1 && third == 0)) {
                  
-            subCounter++;
+            subCounter = subCounter + 1;
             cout << "\tSub Counter:" << subCounter << "\t";
             add(accumulator, multiplicandComp, multiplicandLength);
              
@@ -223,7 +223,7 @@ void modifiedBoothAlgorithm(int multiplicand[], int multiplier[], int multiplica
 
         } else if ((first == 0 && second == 0 && third == 1) || (first == 0 && second == 1 && third == 0)) {
                 add(accumulator, multiplicand, multiplicandLength);
-                addCounter++;
+                addCounter = addCounter + 1;
                 cout << "\tAdd Counter:" << addCounter << "\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
@@ -231,7 +231,7 @@ void modifiedBoothAlgorithm(int multiplicand[], int multiplier[], int multiplica
 
         } else if ((first == 0 && second == 1 && third == 1)) {
                 add(accumulator, twiceMultiplicand, multiplicandLength);
-                addCounter++;
+                addCounter = addCounter + 1;
                 cout << "\tAdd Counter:" << addCounter << "\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
@@ -239,8 +239,8 @@ void modifiedBoothAlgorithm(int multiplicand[], int multiplier[], int multiplica
 
         } else if ((first == 1 && second == 0 && third == 0)) {
                 add(accumulator, twiceMultiplicandComp, multiplicandLength);
-                subCounter++;
-                cout << "\tSub Counter:" << addCounter << "\t";
+                subCounter = subCounter + 1;
+                cout << "\tSub Counter:" << subCounter << "\t";
                  
                 for (int i = multiplierLength - 1; i >= 0; i--)
                     cout << accumulator[i];
