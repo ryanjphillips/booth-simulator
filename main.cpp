@@ -112,7 +112,7 @@ void boothAlgorithm(int multiplicand[], int multiplier[], int multiplicandComp[]
 
     // Print Table Header.
     cout << "Booth's Algorithm\n";
-    cout << "q[n+1]\tE\tmultiplicand\tAC\tmultiplier\tsequenceCounter\n";
+    cout << "q[n+1]\tE\tmultiplicand\tAC\t\tmultiplier\t\tsequenceCounter\n";
     cout << "\t\tinitial\t\t";
     display(accumulator, multiplier, multiplierLength);
     cout << "\t\t" << sequenceCounter << "\n";
@@ -197,7 +197,7 @@ void modifiedBoothAlgorithm(int multiplicand[], int multiplier[], int multiplica
     logicalShiftLeft(twiceMultiplicandComp, multiplicandLength);
 
     cout << "Modified Booth's Algorithm\n";
-    cout << "q[n+1]\tE\tmultiplicand\tAC\tmultiplier\tsequenceCounter\n";
+    cout << "q[n+1]\tE\tmultiplicand\tAC\t\tmultiplier\t\tsequenceCounter\n";
     cout << "\t\tinitial\t\t";
     display(accumulator, multiplier, multiplierLength);
     cout << "\t\t" << sequenceCounter << "\n";
@@ -285,8 +285,8 @@ void algorithmInit(string currentMultiplicand, string currentMultiplier, int alg
     // Set the lengths of the multiplier and multiplicand.
     // Calculate the Two's complement of the multiplicnad.
     
-    string stringMultiplicand = "001011";
-    string stringMultiplier = "011001";
+    string stringMultiplicand = "1111";
+    string stringMultiplier = "1110";
     int multiplierLength = stringMultiplier.length();
     int multiplicandLength = stringMultiplicand.length();
     int addCount = 0;
@@ -319,6 +319,8 @@ void algorithmInit(string currentMultiplicand, string currentMultiplier, int alg
     // Call the main loop, Booth's Algorith.
     // Check if booth's algorithm or modified.
 
+    cout << "Multiplier " << " * " << " Multiplicand " << endl;
+    cout << stringMultiplier << " * " << stringMultiplicand << endl;
     if (algorithmVersion == 0) {
       boothAlgorithm(multiplicand, multiplier, multiplicandComp, multiplierLength, multiplicandLength, sequenceCounter, addCount, subCount);
     } else {
