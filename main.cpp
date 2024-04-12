@@ -60,7 +60,7 @@ void logicalShiftLeft(int multiplicand[], int multiplicandLength) {
     int i = 0;
 
     // Loops through reversed adding 0 to the LSB.
-    for (i = multiplicandLength; i > 0; i--) {
+    for (i = multiplicandLength - 1; i > 0; i--) {
         multiplicand[i] = multiplicand[i - 1];
     }
 
@@ -286,8 +286,8 @@ void algorithmInit(string currentMultiplicand, string currentMultiplier, int alg
     // Set the lengths of the multiplier and multiplicand.
     // Calculate the Two's complement of the multiplicnad.
     
-    string stringMultiplicand = "1111";
-    string stringMultiplier = "1110";
+    string stringMultiplier = "1001101110";
+    string stringMultiplicand = "0101111010";
     int multiplierLength = stringMultiplier.length();
     int multiplicandLength = stringMultiplicand.length();
     int addCount = 0;
@@ -329,6 +329,7 @@ void algorithmInit(string currentMultiplicand, string currentMultiplier, int alg
     }
 
     // Memory Management
+    
     delete[] multiplicand;
     delete[] multiplier;
 }
@@ -336,8 +337,10 @@ void algorithmInit(string currentMultiplicand, string currentMultiplier, int alg
 
 int main() {
 
-    algorithmInit("0", "0", 0);
+    // Call the Algorithm Init function, then kicks off Booth's Algo.
+    
+    algorithmInit("0");
     cout << "\n";
-    algorithmInit("0", "0", 1);
+    algorithmInit("1");
     return 0;
 }
